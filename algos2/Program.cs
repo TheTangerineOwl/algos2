@@ -6,7 +6,7 @@ namespace algos2
     // 2 способ (Вершина хранит указатель на начало односвязного списка.
     // Элемент списка содержит пару: символ, указатель.
     // Поиск пути - обычный перебор списка
-    class Node
+    class Node : INode
     {
         char symbol;
         List<Node> branches = new();
@@ -38,7 +38,7 @@ namespace algos2
             return false;
         }
 
-        public Node AddChild(char value)
+        public INode AddChild(char value)
         {
             Node child = new Node();
             child.symbol = value;
@@ -46,7 +46,7 @@ namespace algos2
             return child;
         }
 
-        public Node? GetChild(char value)
+        public INode? GetChild(char value)
         {
             foreach (Node node in branches)
             {
@@ -56,9 +56,9 @@ namespace algos2
             return null;
         }
 
-        public List<Node> GetDescendants()
+        public List<INode> GetDescendants()
         {
-            List<Node> desc = new();
+            List<INode> desc = new();
             foreach (Node child in branches)
             {
                 desc.Add(child);
@@ -122,7 +122,7 @@ namespace algos2
         //public void Insert(string key, char value)
         public void Insert(string key)
         {
-            Node node = root;
+            INode node = root;
             for (int i = 0; i < key.Length; i++)
             {
                 char ch = key[i];
@@ -135,9 +135,9 @@ namespace algos2
             node.IsKey = true;
         }
 
-        public Node? Lookup(string key)
+        public INode? Lookup(string key)
         {
-            Node? node = root;
+            INode? node = root;
             for (int i = 0; i < key.Length; i++)
             {
                 char ch = key[i];
@@ -151,12 +151,12 @@ namespace algos2
                 return null;
         }
 
-        public List<Node>? Search(string key)
+        public List<INode>? Search(string key)
         {
-            List<Node>? results = new();
+            List<INode>? results = new();
             if (key.Length == 0)
                 return results;
-            Node? node = root;
+            INode? node = root;
             for (int i = 0; i < key.Length; i++)
             {
                 char ch = key[i];
@@ -175,7 +175,7 @@ namespace algos2
             List<string>? results = new();
             if (key.Length == 0)
                 return results;
-            Node? node = root;
+            INode? node = root;
             for (int i = 0; i < key.Length; i++)
             {
                 char ch = key[i];
