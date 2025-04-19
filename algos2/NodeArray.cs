@@ -9,7 +9,6 @@ namespace algos2
     class NodeArray : INode
     {
         char symbol;
-        //List<Node> branches = new();
         NodeArray?[] branches = new NodeArray?[58];
         // ascii - 65 
         // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
@@ -35,11 +34,6 @@ namespace algos2
 
         public bool HasChild(char value)
         {
-            /*foreach (NodeArray node in branches)
-            {
-                if (node.symbol == value)
-                    return true;
-            }*/
             if (value > 122 || value < 65)
                 throw new ArgumentException($"Некорректный символ {value}!");
             return branches[value - 65] != null;
@@ -49,7 +43,6 @@ namespace algos2
         {
             NodeArray child = new NodeArray();
             child.symbol = value;
-            //branches.Add(child);
             if (!char.IsAscii(value) || value > 122 || value < 65)
                 throw new ArgumentException($"Некорректный символ {value}!");
             branches[value - 65] = child;
@@ -58,11 +51,6 @@ namespace algos2
 
         public INode? GetChild(char value)
         {
-            /*foreach (NodeArray node in branches)
-            {
-                if (node.symbol == value)
-                    return node;
-            }*/
             if (value > 122 || value < 65)
                 throw new ArgumentException($"Некорректный символ {value}!");
             return branches[value - 65];
@@ -87,12 +75,6 @@ namespace algos2
             List<string> pref = new();
             if (IsKey)
                 return [parentWord];
-            /*foreach (NodeArray child in branches)
-            {
-                if (child == null)
-                    continue;
-                pref.AddRange(child.GetWords(parentWord + child.Value));
-            }*/
 
             if (fromIndex < parentWord.Length)
             {
@@ -107,10 +89,8 @@ namespace algos2
             else
             {
                 foreach (NodeArray branch in branches)
-                {
                     if (branch != null)
                         pref.AddRange(branch.GetWords(parentWord + branch.Value, fromIndex + 1));
-                }
             }
 
             return pref;

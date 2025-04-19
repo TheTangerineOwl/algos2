@@ -3,96 +3,16 @@ using System.Globalization;
 
 namespace algos2
 {
-    // 2 способ (Вершина хранит указатель на начало односвязного списка.
-    // Элемент списка содержит пару: символ, указатель.
-    // Поиск пути - обычный перебор списка
-    class Node : INode
-    {
-        char symbol;
-        List<Node> branches = new();
-        bool isKey = false;
-
-        public char Value {
-            get { return symbol; }
-            set
-            {
-                symbol = value;
-            }
-        }
-        public bool IsKey
-        {
-            get { return isKey; }
-            set
-            {
-                isKey = value;
-            }
-        }
-
-        public bool HasChild(char value)
-        {
-            foreach (Node node in branches)
-            {
-                if (node.symbol == value)
-                    return true;
-            }
-            return false;
-        }
-
-        public INode AddChild(char value)
-        {
-            Node child = new Node();
-            child.symbol = value;
-            branches.Add(child);
-            return child;
-        }
-
-        public INode? GetChild(char value)
-        {
-            foreach (Node node in branches)
-            {
-                if (node.symbol == value)
-                    return node;
-            }
-            return null;
-        }
-
-        public List<INode> GetDescendants()
-        {
-            List<INode> desc = new();
-            foreach (Node child in branches)
-            {
-                desc.Add(child);
-                desc.AddRange(child.GetDescendants());
-            }
-            return desc;
-        }
-
-        public List<string> GetWords(string parentWord = "", int fromIndex = 0)
-        {
-            List<string> pref = new();
-            if (branches.Count == 0 && IsKey)
-                //return [parentWord + Value.ToString()];
-                return [parentWord];
-            foreach (Node child in branches)
-            {
-                //if (child.IsKey)
-                //pref.Add(parentWord + child.Value);
-                pref.AddRange(child.GetWords(parentWord + child.Value));
-            }
-            return pref;
-        }
-    }
-
     public class Trie
     {
-        INode root;// = new();
+        INode root;
 
         public Trie(bool withArray)
         {
             if (withArray)
                 root = new NodeArray();
             else
-                root = new Node();
+                root = new NodeList();
         }
 
         /*
@@ -127,7 +47,6 @@ namespace algos2
             get => avPath;
         }*/
 
-        //public void Insert(string key, char value)
         public void Insert(string key)
         {
             INode node = root;
@@ -169,10 +88,10 @@ namespace algos2
             {
                 char ch = key[i];
                 if (!node.HasChild(ch))
-                    return null;///////////////
+                    return null;
                 node = node.GetChild(ch);
             }
-            foreach (Node d in node.GetDescendants())
+            foreach (INode d in node.GetDescendants())
                 if (d != null && d.IsKey)
                     results.Add(d);
             return results;
@@ -188,7 +107,7 @@ namespace algos2
             {
                 char ch = key[i];
                 if (!node.HasChild(ch))
-                    return null;///////////////
+                    return null;
                 node = node.GetChild(ch);
             }
             foreach (string d in node.GetWords(key, key.Length))
@@ -219,7 +138,7 @@ namespace algos2
             Trie tree = new(true);
             List<string> values = ReadFile("words.txt");
             foreach (string word in values)
-                tree.Insert(word);//, word[^1]);
+                tree.Insert(word);
 
             while (true)
             {
