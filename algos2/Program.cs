@@ -15,49 +15,41 @@ namespace algos2
                 root = new NodeList();
         }
 
-        /*
-        int charCount = 0;
-        int wordCount = 0;
-        int innerNodeCount = 0;
-        int branchCount = 0;
-        int avPath = 0;
+        // Метрики для всего дерева
+        public int TotalCharacters { get; private set; }
+        public int TotalWords => TrieMetrics.LeafNodesCount(root);
+        public int InternalNodes => TrieMetrics.InternalNodesCount(root);
+        public int BranchingNodes => TrieMetrics.BranchingNodesCount(root);
+        public double AvgBranchingFactor => TrieMetrics.AvgBranchingFactor(root);
 
-        public int CharCount
+        public void PrintMetrics()
         {
-            get => charCount;
+            Console.WriteLine("\nМетрики префиксного дерева:");
+            Console.WriteLine($"1. Общее количество символов: {TotalCharacters}");
+            Console.WriteLine($"2. Количество слов (листовых вершин в дереве): {TotalWords}");
+            Console.WriteLine($"3. Количество внутренних вершин: {InternalNodes}");
+            Console.WriteLine($"4. Количество ветвлений (внутренних вершин из которых более одного пути): {BranchingNodes}");
+            Console.WriteLine($"5. Среднее количество путей в вершинах ветвлений: {AvgBranchingFactor:F2}\n");
         }
-
-        public int WordCount
-        {
-            get => wordCount;
-        }
-
-        public int InnerNodeCount
-        {
-            get => innerNodeCount;
-        }
-
-        public int BranchCount
-        {
-            get => branchCount;
-        }
-
-        public int AveragePathCount
-        {
-            get => avPath;
-        }*/
 
         public void Insert(string key)
         {
+            //TotalCharacters += key.Length;
+            bool flagNew = false;
             INode node = root;
             for (int i = 0; i < key.Length; i++)
             {
                 char ch = key[i];
                 if (!node.HasChild(ch))
+                {
                     node = node.AddChild(ch);
+                    flagNew = true;
+                }
                 else
                     node = node.GetChild(ch);
             }
+            if (flagNew)
+                TotalCharacters += key.Length;
             node.Value = key[^1];
             node.IsKey = true;
         }
@@ -135,10 +127,18 @@ namespace algos2
 
         static void Main()
         {
-            Trie tree = new(true);
+            Trie tree = new(false);
             List<string> values = ReadFile("words.txt");
+
+            Console.WriteLine($"Загружено слов: {values.Count}");
+
+            // Загрузка в дерево
+
             foreach (string word in values)
                 tree.Insert(word);
+
+            // Вывод метрик после загрузки
+            tree.PrintMetrics();
 
             while (true)
             {
@@ -155,8 +155,11 @@ namespace algos2
                     if (search == null || search.Count == 0)
                         Console.WriteLine("Не найдено результатов");
                     else
+                    {
+                        Console.WriteLine($"Найдено слов: {search.Count}");
                         foreach (var word in search)
                             Console.WriteLine(word);
+                    }
                 }
                 catch (Exception ex)
                 {

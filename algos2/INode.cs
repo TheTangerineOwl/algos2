@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,9 @@ namespace algos2
 {
     public interface INode
     {
+        public IEnumerable<INode?> Branches { get; }
+
+
         public char Value { get; set; }
         public bool IsKey { get; set; }
 

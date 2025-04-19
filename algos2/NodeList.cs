@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +13,11 @@ namespace algos2
         char symbol;
         List<NodeList> branches = new();
         bool isKey = false;
+
+        public IEnumerable<INode> Branches
+        {
+            get => branches.AsEnumerable();
+        }
 
         public char Value
         {

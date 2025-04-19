@@ -11,9 +11,14 @@ namespace algos2
         char symbol;
         NodeArray?[] branches = new NodeArray?[58];
         // ascii - 65 
-        // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+        // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz, $ - конечный симв
 
         bool isKey = false;
+
+        public IEnumerable<INode?> Branches
+        {
+            get => branches.AsEnumerable();
+        }
 
         public char Value
         {
