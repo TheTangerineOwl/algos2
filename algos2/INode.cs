@@ -18,6 +18,6 @@ namespace algos2
 
         public List<INode> GetDescendants();
 
-        public List<string> GetWords(string parentWord = "");
+        public List<string> GetWords(string parentWord = "", int fromIndex = 0);
     }
 }

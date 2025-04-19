@@ -67,7 +67,7 @@ namespace algos2
             return desc;
         }
 
-        public List<string> GetWords(string parentWord = "")
+        public List<string> GetWords(string parentWord = "", int fromIndex = 0)
         {
             List<string> pref = new();
             if (branches.Count == 0 && IsKey)
@@ -83,9 +83,17 @@ namespace algos2
         }
     }
 
-    class Trie
+    public class Trie
     {
-        Node root = new();
+        INode root;// = new();
+
+        public Trie(bool withArray)
+        {
+            if (withArray)
+                root = new NodeArray();
+            else
+                root = new Node();
+        }
 
         /*
         int charCount = 0;
@@ -183,7 +191,7 @@ namespace algos2
                     return null;///////////////
                 node = node.GetChild(ch);
             }
-            foreach (string d in node.GetWords(key))
+            foreach (string d in node.GetWords(key, key.Length))
                 results.Add(d);
             return results;
         }
@@ -199,7 +207,8 @@ namespace algos2
                 string? value;
                 while ((value = file.ReadLine()) != null)
                 {
-                    values.Add(value.Split(' ')[1]);
+                    //values.Add(value.Split(". ")[1]);
+                    values.Add(value);
                 }
             }
             return values;
@@ -207,7 +216,7 @@ namespace algos2
 
         static void Main()
         {
-            Trie tree = new();
+            Trie tree = new(true);
             List<string> values = ReadFile("words.txt");
             foreach (string word in values)
                 tree.Insert(word);//, word[^1]);
@@ -221,12 +230,19 @@ namespace algos2
                 if (input == "")
                     break;
 
-                List<string>? search = tree.SearchWords(input);
-                if (search == null)
-                    Console.WriteLine("Не найдено результатов");
-                else
-                    foreach (var word in search)
-                        Console.WriteLine(word);
+                try
+                {
+                    List<string>? search = tree.SearchWords(input);
+                    if (search == null || search.Count == 0)
+                        Console.WriteLine("Не найдено результатов");
+                    else
+                        foreach (var word in search)
+                            Console.WriteLine(word);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
     }
