@@ -11,7 +11,7 @@ namespace algos2
     public class NodeList : INode
     {
         char symbol;
-        List<NodeList> branches = new();
+        LinkedList<NodeList> branches = new();
 
         public IEnumerable<INode> Branches
         {
@@ -42,7 +42,7 @@ namespace algos2
             child.symbol = value;
             if (Value == '$')
                 return null;
-            branches.Add(child);
+            branches.AddLast(child);
             return child;
         }
 
