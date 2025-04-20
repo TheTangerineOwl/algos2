@@ -49,7 +49,7 @@ namespace algos2
             if (flagNew)
                 TotalCharacters += key.Length - 1;
             node.Value = key[^1];
-            node.IsKey = true;
+            //node.IsKey = true;
         }
 
         public INode? Lookup(string key)
@@ -62,7 +62,8 @@ namespace algos2
                     return null;
                 node = node.GetChild(ch);
             }
-            if (node.IsKey)
+            //if (node.IsKey)
+            if (node.Value == '$')
                 return node;
             else
                 return null;
@@ -82,7 +83,8 @@ namespace algos2
                 node = node.GetChild(ch);
             }
             foreach (INode d in node.GetDescendants())
-                if (d != null && d.IsKey)
+                //if (d != null && d.IsKey)
+                if (d != null && d.Value == '$')
                     results.Add(d);
             return results;
         }
@@ -90,8 +92,8 @@ namespace algos2
         public List<string>? SearchWords(string key)
         {
             List<string>? results = new();
-            if (key.Length == 0)
-                return results;
+            //if (key.Length == 0)
+                //return results;
             INode? node = root;
             for (int i = 0; i < key.Length; i++)
             {
@@ -158,11 +160,11 @@ namespace algos2
 
             while (true)
             {
-                Console.Write("Введите префикс для поиска (пустая строка для завершения работы): ");
+                Console.Write("Введите префикс для поиска (# для завершения работы): ");
                 string? input;
                 while ((input = Console.ReadLine()) == null)
                     Console.Write("Попробуйте еще раз: ");
-                if (input == "")
+                if (input == "#")
                     break;
 
                 try

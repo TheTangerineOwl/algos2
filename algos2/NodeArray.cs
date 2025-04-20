@@ -14,8 +14,6 @@ namespace algos2
         // ascii - 64, A=65 индекс 1
         // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz, $ - конечный симв с индексом 0
 
-        bool isKey = false;
-
         public IEnumerable<INode?> Branches
         {
             //get => branches.AsEnumerable();
@@ -29,14 +27,6 @@ namespace algos2
             set
             {
                 symbol = value;
-            }
-        }
-        public bool IsKey
-        {
-            get { return isKey; }
-            set
-            {
-                isKey = value;
             }
         }
 
@@ -96,11 +86,8 @@ namespace algos2
         public List<string> GetWords(string parentWord = "", int fromIndex = 0)
         {
             List<string> pref = new();
-            if (IsKey)
-                if (Value != '$')
-                    return [parentWord];
-                else
-                    return [parentWord.Remove(parentWord.Length - 1)];
+            if (Value != '$')
+                return [parentWord.Remove(parentWord.Length - 1)];
 
 
             if (fromIndex < parentWord.Length)

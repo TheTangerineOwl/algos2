@@ -12,11 +12,10 @@ namespace algos2
     {
         char symbol;
         List<NodeList> branches = new();
-        bool isKey = false;
 
         public IEnumerable<INode> Branches
         {
-            get => branches.Where(x => x != null);
+            get => branches;//.Where(x => x != null);
         }
 
         public char Value
@@ -27,15 +26,6 @@ namespace algos2
                 symbol = value;
             }
         }
-        public bool IsKey
-        {
-            get { return isKey; }
-            set
-            {
-                isKey = value;
-            }
-        }
-
         public bool HasChild(char value)
         {
             foreach (NodeList NodeList in branches)
@@ -80,7 +70,7 @@ namespace algos2
         public List<string> GetWords(string parentWord = "", int fromIndex = 0)
         {
             List<string> pref = new();
-            if (branches.Count == 0 && IsKey)
+            if (branches.Count == 0 && Value == '$')
                 return [parentWord];
             foreach (NodeList child in branches)
                 pref.AddRange(child.GetWords(parentWord + child.Value));
