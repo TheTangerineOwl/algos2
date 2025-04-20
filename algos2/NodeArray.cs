@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,15 +10,17 @@ namespace algos2
     class NodeArray : INode
     {
         char symbol;
-        NodeArray?[] branches = new NodeArray?[58];
-        // ascii - 65 
-        // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz, $ - конечный симв
+        NodeArray?[] branches = new NodeArray?[59];
+        // ascii - 64, A=65 индекс 1
+        // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz, $ - конечный симв с индексом 0
 
         bool isKey = false;
 
         public IEnumerable<INode?> Branches
         {
-            get => branches.AsEnumerable();
+            //get => branches.AsEnumerable();
+
+            get => branches.Where(x => x != null);
         }
 
         public char Value
@@ -39,31 +42,46 @@ namespace algos2
 
         public bool HasChild(char value)
         {
+            if (value == '$')
+                return branches[0] != null;
             if (value > 122 || value < 65)
                 throw new ArgumentException($"Некорректный символ {value}!");
-            return branches[value - 65] != null;
+            return branches[value - 64] != null;
         }
 
-        public INode AddChild(char value)
+        public INode? AddChild(char value)
         {
             NodeArray child = new NodeArray();
             child.symbol = value;
-            if (!char.IsAscii(value) || value > 122 || value < 65)
+            if (Value == '$')
+                return null;
+            if (value == '$')
+            {
+                branches[0] = child;
+                return child;
+            }
+            if (value > 122 || value < 65)
                 throw new ArgumentException($"Некорректный символ {value}!");
-            branches[value - 65] = child;
+            branches[value - 64] = child;
             return child;
         }
 
         public INode? GetChild(char value)
         {
+            if (Value == '$')
+                return null;
+            if (value == '$')
+                return branches[0];
             if (value > 122 || value < 65)
                 throw new ArgumentException($"Некорректный символ {value}!");
-            return branches[value - 65];
+            return branches[value - 64];
         }
 
         public List<INode> GetDescendants()
         {
             List<INode> desc = new();
+            if (Value == '$')
+                return desc;
             foreach (NodeArray child in branches)
             {
                 if (child != null)
@@ -79,14 +97,25 @@ namespace algos2
         {
             List<string> pref = new();
             if (IsKey)
-                return [parentWord];
+                if (Value != '$')
+                    return [parentWord];
+                else
+                    return [parentWord.Remove(parentWord.Length - 1)];
+
 
             if (fromIndex < parentWord.Length)
             {
                 char ch = parentWord[fromIndex];
-                if (ch > 122 || ch < 65)
+                if ((ch > 122 || ch < 65) && ch != '$')
                     throw new ArgumentException($"Некорректный символ {ch}!");
-                NodeArray? node = branches[ch - 65];
+                NodeArray? node;
+                if (ch == '$')
+                {
+                    node = branches[0];
+                    return [parentWord.Remove(parentWord.Length - 1)];
+                }
+                else
+                    node = branches[ch - 64];
                 if (node == null)
                     return [parentWord];
                 pref.AddRange(node.GetWords(parentWord + node.Value, fromIndex + 1));

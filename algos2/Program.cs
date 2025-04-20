@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace algos2
@@ -49,7 +50,7 @@ namespace algos2
                     node = node.GetChild(ch);
             }
             if (flagNew)
-                TotalCharacters += key.Length;
+                TotalCharacters += key.Length - 1;
             node.Value = key[^1];
             node.IsKey = true;
         }
@@ -119,7 +120,7 @@ namespace algos2
                 while ((value = file.ReadLine()) != null)
                 {
                     //values.Add(value.Split(". ")[1]);
-                    values.Add(value);
+                    values.Add(value + '$');
                 }
             }
             return values;
@@ -127,17 +128,34 @@ namespace algos2
 
         static void Main()
         {
-            Trie tree = new(false);
+            Trie tree = new(true);
             List<string> values = ReadFile("words.txt");
+            Stopwatch stopwatch1 = new();
 
             Console.WriteLine($"Загружено слов: {values.Count}");
 
             // Загрузка в дерево
-
+            stopwatch1.Start();
             foreach (string word in values)
                 tree.Insert(word);
+            stopwatch1.Stop();
+            TimeSpan ts = stopwatch1.Elapsed;
+            Console.WriteLine("Результат построения дерева с массивом вершин " + ts.TotalMilliseconds + " мсек.");
 
             // Вывод метрик после загрузки
+            tree.PrintMetrics();
+
+            tree = new(false);
+
+            // Загрузка в дерево
+            stopwatch1.Reset();
+            stopwatch1.Start();
+            foreach (string word in values)
+                tree.Insert(word);
+            stopwatch1.Stop();
+            ts = stopwatch1.Elapsed;
+            Console.WriteLine("Результат построения дерева с односвязным списком вершин " + ts.TotalMilliseconds + " мсек.");
+
             tree.PrintMetrics();
 
             while (true)

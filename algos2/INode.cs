@@ -16,7 +16,7 @@ namespace algos2
         public bool IsKey { get; set; }
 
         public bool HasChild(char value);
-        public INode AddChild(char value);
+        public INode? AddChild(char value);
 
         public INode? GetChild(char value);
 

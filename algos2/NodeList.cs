@@ -16,7 +16,7 @@ namespace algos2
 
         public IEnumerable<INode> Branches
         {
-            get => branches.AsEnumerable();
+            get => branches.Where(x => x != null);
         }
 
         public char Value
@@ -46,10 +46,12 @@ namespace algos2
             return false;
         }
 
-        public INode AddChild(char value)
+        public INode? AddChild(char value)
         {
             NodeList child = new NodeList();
             child.symbol = value;
+            if (Value == '$')
+                return null;
             branches.Add(child);
             return child;
         }
