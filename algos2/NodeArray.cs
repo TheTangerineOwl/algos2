@@ -41,25 +41,21 @@ namespace algos2
 
         public INode? AddChild(char value)
         {
-            NodeArray child = new NodeArray();
-            child.symbol = value;
             if (Value == '$')
                 return null;
             if (value == '$')
             {
-                branches[0] = child;
-                return child;
+                branches[0] = new() { symbol = value };
+                return branches[0];
             }
             if (value > 122 || value < 65)
                 throw new ArgumentException($"Некорректный символ {value}!");
-            branches[value - 64] = child;
-            return child;
+            branches[value - 64] = new() { symbol = value };
+            return branches[value - 64];
         }
 
         public INode? GetChild(char value)
         {
-            if (Value == '$')
-                return null;
             if (value == '$')
                 return branches[0];
             if (value > 122 || value < 65)
