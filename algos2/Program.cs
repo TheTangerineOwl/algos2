@@ -127,10 +127,11 @@ namespace algos2
 
         static void Main()
         {
-            Trie tree = new(true);
+            Trie tree = new(false);
             TrieMetrics metrics = new();
             List<string> values = ReadFile("words.txt");
             Stopwatch stopwatch1 = new();
+            TimeSpan ts;
 
             Console.WriteLine($"Загружено слов: {values.Count}");
 
@@ -139,13 +140,13 @@ namespace algos2
             foreach (string word in values)
                 tree.Insert(word);
             stopwatch1.Stop();
-            TimeSpan ts = stopwatch1.Elapsed;
-            Console.WriteLine("Результат построения дерева с массивом вершин " + ts.TotalMilliseconds + " мсек.");
+            ts = stopwatch1.Elapsed;
+            Console.WriteLine("Результат построения дерева со списком " + ts.TotalMilliseconds + " мсек.");
 
             // Вывод метрик после загрузки
             tree.PrintMetrics(metrics);
 
-            tree = new(false);
+            tree = new(true);
 
             // Загрузка в дерево
             stopwatch1.Reset();
@@ -154,7 +155,7 @@ namespace algos2
                 tree.Insert(word);
             stopwatch1.Stop();
             ts = stopwatch1.Elapsed;
-            Console.WriteLine("Результат построения дерева с односвязным списком вершин " + ts.TotalMilliseconds + " мсек.");
+            Console.WriteLine("Результат построения дерева с массивом " + ts.TotalMilliseconds + " мсек.");
 
             tree.PrintMetrics(metrics);
 

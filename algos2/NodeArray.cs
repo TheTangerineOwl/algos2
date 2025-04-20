@@ -86,7 +86,7 @@ namespace algos2
         public List<string> GetWords(string parentWord = "", int fromIndex = 0)
         {
             List<string> pref = new();
-            if (Value != '$')
+            if (Value == '$')
                 return [parentWord.Remove(parentWord.Length - 1)];
 
 
