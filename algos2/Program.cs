@@ -18,19 +18,16 @@ namespace algos2
 
         // Метрики для всего дерева
         public int TotalCharacters { get; private set; }
-        public int TotalWords => TrieMetrics.LeafNodesCount(root);
-        public int InternalNodes => TrieMetrics.InternalNodesCount(root);
-        public int BranchingNodes => TrieMetrics.BranchingNodesCount(root);
-        public double AvgBranchingFactor => TrieMetrics.AvgBranchingFactor(root);
 
-        public void PrintMetrics()
+        public void PrintMetrics(TrieMetrics metrics)
         {
+            metrics.CountStats(root, true);
             Console.WriteLine("\nМетрики префиксного дерева:");
             Console.WriteLine($"1. Общее количество символов: {TotalCharacters}");
-            Console.WriteLine($"2. Количество слов (листовых вершин в дереве): {TotalWords}");
-            Console.WriteLine($"3. Количество внутренних вершин: {InternalNodes}");
-            Console.WriteLine($"4. Количество ветвлений (внутренних вершин из которых более одного пути): {BranchingNodes}");
-            Console.WriteLine($"5. Среднее количество путей в вершинах ветвлений: {AvgBranchingFactor:F2}\n");
+            Console.WriteLine($"2. Количество слов (листовых вершин в дереве): {metrics.TotalWords}");
+            Console.WriteLine($"3. Количество внутренних вершин: {metrics.InternalNodes}");
+            Console.WriteLine($"4. Количество ветвлений (внутренних вершин из которых более одного пути): {metrics.BranchingNodes}");
+            Console.WriteLine($"5. Среднее количество путей в вершинах ветвлений: {metrics.AvgBranching:F2}\n");
         }
 
         public void Insert(string key)
@@ -129,6 +126,7 @@ namespace algos2
         static void Main()
         {
             Trie tree = new(true);
+            TrieMetrics metrics = new();
             List<string> values = ReadFile("words.txt");
             Stopwatch stopwatch1 = new();
 
@@ -143,7 +141,7 @@ namespace algos2
             Console.WriteLine("Результат построения дерева с массивом вершин " + ts.TotalMilliseconds + " мсек.");
 
             // Вывод метрик после загрузки
-            tree.PrintMetrics();
+            tree.PrintMetrics(metrics);
 
             tree = new(false);
 
@@ -156,7 +154,7 @@ namespace algos2
             ts = stopwatch1.Elapsed;
             Console.WriteLine("Результат построения дерева с односвязным списком вершин " + ts.TotalMilliseconds + " мсек.");
 
-            tree.PrintMetrics();
+            tree.PrintMetrics(metrics);
 
             while (true)
             {

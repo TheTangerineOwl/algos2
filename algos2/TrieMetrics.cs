@@ -6,71 +6,50 @@ using System.Threading.Tasks;
 
 namespace algos2
 {
-    public static class TrieMetrics
+    public class TrieMetrics
     {
-        public static int TotalNodesInSubtree(INode node)
+        public int TotalNodes { get; private set; }
+        public int TotalWords { get; private set; }
+        public int InternalNodes { get; private set; }
+        public int BranchingNodes { get; private set; }
+        public int BranchesInBranching { get; private set; }
+        public double AvgBranching { get; private set; }
+
+        public void CountStats(INode root, bool isRoot)
         {
-            int count = 1; // текущий узел
-            foreach (var child in node.Branches)
-                if (child != null)
-                    count += TotalNodesInSubtree(child);
-            return count;
+            TotalNodes = -1; // без root
+            TotalWords = 0;
+            InternalNodes = 0;
+            BranchingNodes = 0;
+            BranchesInBranching = 0;
+
+            AllAtOnceRec(root, isRoot);
+
+            InternalNodes = TotalNodes - TotalWords;
         }
 
-        public static int LeafNodesCount(INode node)
+        private void AllAtOnceRec(INode node, bool isRoot)
         {
-            if (!node.Branches.Any()) return 1;
-
-            int count = 0;
-            foreach (var child in node.Branches)
-                if (child != null)
-                    count += LeafNodesCount(child);
-            return count;
-        }
-
-        public static int InternalNodesCount(INode node, bool isRoot = true)
-        {
-            if (!node.Branches.Any())
-                return 0; // Лист не считается внутренним
-
-            int count = isRoot ? 0 : 1; // Не считаем корень
-            foreach (var child in node.Branches)
-                if (child != null)
-                    count += InternalNodesCount(child, false); // передаём дальше, что это не корень
-            return count;
-        }
-
-        public static int BranchingNodesCount(INode node)
-        {
-            int count = node.Branches.Count() > 1 ? 1 : 0;
-            foreach (var child in node.Branches)
-                if (child != null)
-                    count += BranchingNodesCount(child);
-            return count;
-        }
-
-        public static double AvgBranchingFactor(INode node)
-        {
-            int branchingNodes = BranchingNodesCount(node);
-            if (branchingNodes == 0) return 0;
-
-            double totalBranches = CountBranchesInBranchingNodes(node);
-            return totalBranches / branchingNodes;
-        }
-
-        private static double CountBranchesInBranchingNodes(INode node)
-        {
-            double count = 0;
-
+            TotalNodes += 1;
             int branchCount = node.Branches.Count();
-            if (branchCount > 1)
-                count += branchCount;
+            if (branchCount == 0)
+                TotalWords += 1;
+            //else if (branchCount == 1)
+                //InternalNodes = isRoot ? InternalNodes : InternalNodes + 1;
+            else if (!isRoot)
+            {
+                InternalNodes += 1;
+                if (branchCount > 1)
+                {
+                    BranchingNodes += 1;
+                    BranchesInBranching += branchCount;
+                    AvgBranching = (double)BranchesInBranching / (double)BranchingNodes;
+                }
+            }
 
             foreach (var child in node.Branches)
                 if (child != null)
-                    count += CountBranchesInBranchingNodes(child);
-
-            return count;
+                    AllAtOnceRec(child, false);
         }
     }
 }
