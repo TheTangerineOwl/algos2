@@ -127,7 +127,7 @@ namespace algos2
 
         static void Main()
         {
-            Trie tree = new(false);
+            Trie tree = new(true);
             TrieMetrics metrics = new();
             List<string> values = ReadFile("words.txt");
             Stopwatch stopwatch1 = new();
@@ -141,23 +141,24 @@ namespace algos2
                 tree.Insert(word);
             stopwatch1.Stop();
             ts = stopwatch1.Elapsed;
-            Console.WriteLine("Результат построения дерева со списком " + ts.TotalMilliseconds + " мсек.");
+            Console.WriteLine("Результат построения дерева с массивом " + ts.TotalMilliseconds + " мсек.");
 
             // Вывод метрик после загрузки
             tree.PrintMetrics(metrics);
 
-            tree = new(true);
+            
+            Trie tree1 = new(false);
 
             // Загрузка в дерево
             stopwatch1.Reset();
             stopwatch1.Start();
             foreach (string word in values)
-                tree.Insert(word);
+                tree1.Insert(word);
             stopwatch1.Stop();
             ts = stopwatch1.Elapsed;
-            Console.WriteLine("Результат построения дерева с массивом " + ts.TotalMilliseconds + " мсек.");
+            Console.WriteLine("Результат построения дерева со списком " + ts.TotalMilliseconds + " мсек.");
 
-            tree.PrintMetrics(metrics);
+            tree1.PrintMetrics(metrics);
 
             while (true)
             {
@@ -170,7 +171,7 @@ namespace algos2
 
                 try
                 {
-                    List<string>? search = tree.SearchWords(input);
+                    List<string>? search = tree1.SearchWords(input);
                     if (search == null || search.Count == 0)
                         Console.WriteLine("Не найдено результатов");
                     else

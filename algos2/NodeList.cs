@@ -71,7 +71,7 @@ namespace algos2
         {
             List<string> pref = new();
             if (branches.Count == 0 && Value == '$')
-                return [parentWord];
+                return [parentWord.Remove(parentWord.Length - 1)];
             foreach (NodeList child in branches)
                 pref.AddRange(child.GetWords(parentWord + child.Value));
             return pref;
